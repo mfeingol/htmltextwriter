@@ -174,6 +174,18 @@ namespace System.Web.UI
             }
         }
 
+        async Task CloseTagIfNecessaryAsync(bool newline = true)
+        {
+            if (this.pendingCloseTag)
+            {
+                await this.InnerWriter.WriteAsync(TagRightChar);
+                this.pendingCloseTag = false;
+
+                if (newline)
+                    await this.WriteLineAsync();
+            }
+        }
+
         //
         // Indents
         //
@@ -214,6 +226,13 @@ namespace System.Web.UI
             this.CloseTagIfNecessary(newLineIfClosingTag);
             if (indent)
                 this.IndentIfNecessary();
+        }
+
+        async Task BeforeWriteAsync(bool indent = true, bool newLineIfClosingTag = true)
+        {
+            await this.CloseTagIfNecessaryAsync(newLineIfClosingTag);
+            if (indent)
+                await this.IndentIfNecessaryAsync();
         }
 
         void AfterWriteLine()
@@ -376,19 +395,19 @@ namespace System.Web.UI
 
         public override async Task WriteAsync(string value)
         {
-            await this.IndentIfNecessaryAsync();
+            await this.BeforeWriteAsync();
             await this.InnerWriter.WriteAsync(value);
         }
 
         public override async Task WriteAsync(char value)
         {
-            await this.IndentIfNecessaryAsync();
+            await this.BeforeWriteAsync();
             await this.InnerWriter.WriteAsync(value);
         }
 
         public override async Task WriteAsync(char[] buffer, int index, int count)
         {
-            await this.IndentIfNecessaryAsync();
+            await this.BeforeWriteAsync();
             await this.InnerWriter.WriteAsync(buffer, index, count);
         }
 
@@ -524,28 +543,28 @@ namespace System.Web.UI
 
         public override async Task WriteLineAsync()
         {
-            await this.IndentIfNecessaryAsync();
+            await this.BeforeWriteAsync();
             await this.InnerWriter.WriteLineAsync();
             this.AfterWriteLine();
         }
 
         public override async Task WriteLineAsync(char value)
         {
-            await this.IndentIfNecessaryAsync();
+            await this.BeforeWriteAsync();
             await this.InnerWriter.WriteLineAsync(value);
             this.AfterWriteLine();
         }
 
         public override async Task WriteLineAsync(char[] buffer, int index, int count)
         {
-            await this.IndentIfNecessaryAsync();
+            await this.BeforeWriteAsync();
             await this.InnerWriter.WriteLineAsync(buffer, index, count);
             this.AfterWriteLine();
         }
 
         public override async Task WriteLineAsync(string value)
         {
-            await this.IndentIfNecessaryAsync();
+            await this.BeforeWriteAsync();
             await this.InnerWriter.WriteLineAsync(value);
             this.AfterWriteLine();
         }
