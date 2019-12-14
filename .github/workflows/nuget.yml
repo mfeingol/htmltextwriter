@@ -1,0 +1,22 @@
+name: .NET Core
+
+on:
+  push:
+    branches:
+    - release
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
+    - name: Build NuGet package
+      run: dotnet pack ./Source/HtmlTextWriter.sln -c Release -o packages
+    - name: Publish NuGet package
+      run: dotnet nuget push ./packages/HtmlTextWriter*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
