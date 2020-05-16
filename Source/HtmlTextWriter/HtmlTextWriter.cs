@@ -57,14 +57,6 @@ namespace System.Web.UI
             this.tabString = tabString;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-                this.InnerWriter.Dispose();
-        }
-
         //
         // Properties
         //

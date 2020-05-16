@@ -374,5 +374,25 @@ namespace System.Web.UI.Tests
             const string test = "<html>\r\n\t<h2 align=\"center\">\r\n\t\tTestScenario2\r\n\t</h2>\r\n\t<p>\r\n\t\t<h3 align=\"center\">\r\n\t\t\tHello World\r\n\t\t</h3>\r\n\t</p>\r\n\t<p>\r\n\t\t<table align=\"center\" border=\"0\" cellspacing=\"1\" cellpadding=\"2\" width=\"1024\">\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th colspan=\"3\">\r\n\t\t\t\t\t<font face=\"Times New Roman\">\r\n\t\t\t\t\t\tA nice summary of things\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th align=\"left\">\r\n\t\t\t\t\t<font face=\"Times New Roman\">\r\n\t\t\t\t\t\tBegan\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t\t<th colspan=\"2\" align=\"right\">\r\n\t\t\t\t\t12:00pm\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th align=\"left\">\r\n\t\t\t\t\t<font face=\"Times New Roman\">\r\n\t\t\t\t\t\tEnded\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t\t<th colspan=\"2\" align=\"right\">\r\n\t\t\t\t\t1:00pm\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th align=\"left\">\r\n\t\t\t\t\t<font face=\"arial\">\r\n\t\t\t\t\t\tElapsed\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t\t<th align=\"right\" colspan=\"2\">\r\n\t\t\t\t\t01:00:00\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th align=\"left\">\r\n\t\t\t\t\t<font face=\"Times New Roman\">\r\n\t\t\t\t\t\tResult\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t\t<th colspan=\"2\" align=\"right\">\r\n\t\t\t\t\tGreat Success!\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th align=\"left\">\r\n\t\t\t\t\t<font face=\"Times New Roman\">\r\n\t\t\t\t\t\tA wonderful description\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t\t<th colspan=\"2\" align=\"right\">\r\n\t\t\t\t\tSome text\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</table>\r\n\t</p>\r\n</html>\r\n";
             Assert.AreEqual(test, html);
         }
+
+        [TestMethod]
+        public void CheckNotDisposed()
+        {
+            MemoryStream mem = new MemoryStream();
+            StreamWriter sw = new StreamWriter(mem);
+
+            using (HtmlTextWriter writer = new HtmlTextWriter(sw))
+            {
+                writer.RenderBeginTag(HtmlTextWriterTag.Html);
+                writer.RenderEndTag();
+                writer.Flush();
+            }
+
+            mem.Position = 0;
+            string html = Encoding.UTF8.GetString(mem.ToArray());
+
+            const string test = "<html />\r\n";
+            Assert.AreEqual(test, html);
+        }
     }
 }
