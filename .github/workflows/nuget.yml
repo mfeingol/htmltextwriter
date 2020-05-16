@@ -2,8 +2,8 @@ name: .NET Core
 
 on:
   push:
-    branches:
-    - release
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -19,4 +19,4 @@ jobs:
     - name: Build NuGet package
       run: dotnet pack ./Source/HtmlTextWriter.sln -c Release -o packages
     - name: Publish NuGet package
-      run: dotnet nuget push ./packages/HtmlTextWriter*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push .\packages\HtmlTextWriter*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
