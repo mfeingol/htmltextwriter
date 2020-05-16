@@ -6,7 +6,7 @@
     <RootNamespace>System.Web.UI</RootNamespace>
     <Authors>Max Feingold</Authors>
     <Company>Max Feingold</Company>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,9 +16,17 @@
     <RepositoryUrl>https://github.com/mfeingol/htmltextwriter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Description>.NET Standard-compatible replacement for System.Web.UI.HtmlWriter</Description>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.0
+===
+- Initial Release
+
+2.0.0
+===
+- Don't dispose inner TextWriter</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mfeingol/htmltextwriter</PackageProjectUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
 </Project>
