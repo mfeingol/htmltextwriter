@@ -28,7 +28,8 @@ namespace System.Web.UI
         public const char SpaceChar = ' ';
         public const char StyleEqualsChar = ':';
         public const char TagLeftChar = '<';
-        public const char TagRightChar = '>';
+        public const char TagRightChar = '>';        
+        public const string StyleDeclaringString = "style";        
 
         //
         // Members
@@ -37,7 +38,8 @@ namespace System.Web.UI
         string tabString = DefaultTabString;
 
         Stack<string> openTags;
-        List<KeyValuePair<string, string>> attributes;
+        List<KeyValuePair<string, string>> attributes;        
+        List<KeyValuePair<string, string>> styleAttributes;        
 
         int indent;
         bool lineWasIndented;
@@ -101,7 +103,21 @@ namespace System.Web.UI
                 this.attributes = new List<KeyValuePair<string, string>>();
 
             this.attributes.Add(new KeyValuePair<string, string>(name, value));
-        }
+        }        
+        public void AddStyleAttribute(HtmlTextWriterStyle key, string value) => this.AddStyleAttribute(key, value, true);
+        public void AddStyleAttribute(HtmlTextWriterStyle key, string value, bool encode) => AddStyleAttribute(key.ToName(), value, encode);
+
+        public void AddStyleAttrbiute(string name, string value) => this.AddStyleAttribute(name, value, true);
+        public void AddStyleAttribute(string name, string value, bool encode)
+        {
+            if (encode)
+                value = WebUtility.HtmlEncode(value);
+
+            if (this.styleAttributes == null)
+                this.styleAttributes = new List<KeyValuePair<string, string>>();
+
+            this.styleAttributes.Add(new KeyValuePair<string, string>(name, value));
+        }        
 
         //
         // Tags
@@ -119,7 +135,17 @@ namespace System.Web.UI
                     this.WriteAttribute(attribute.Key, attribute.Value, false); // Already encoded
 
                 this.attributes.Clear();
-            }
+            }            
+            
+           if (this.styleAttributes != null && this.styleAttributes.Any())
+            {
+                this.Write($"{SpaceChar}{StyleDeclaringString}{EqualsDoubleQuoteString}");
+                foreach (KeyValuePair<string, string> styleAttribute in this.styleAttributes)
+                    this.WriteStyleAttribute(styleAttribute.Key, styleAttribute.Value, false);
+
+                this.Write(DoubleQuoteChar);
+                this.styleAttributes.Clear();
+            }            
 
             if (this.openTags == null)
                 this.openTags = new Stack<string>();
@@ -248,7 +274,20 @@ namespace System.Web.UI
 
                 this.Write($"{EqualsDoubleQuoteString}{value}{DoubleQuoteChar}");
             }
-        }
+        }       
+        
+        public void WriteStyleAttribute(string name, string value) => this.WriteStyleAttribute(name, value, true);
+        public void WriteStyleAttribute(string name, string value, bool encode)
+        {
+            if (name != null && value != null)
+            {
+                this.Write($"{name}{StyleEqualsChar}");
+                if (encode)
+                    value = WebUtility.HtmlEncode(value);
+                               
+                this.Write($"{value}{SemicolonChar}{SpaceChar}");
+            }
+        }       
 
         public void WriteBeginTag(string name) => this.Write($"{TagLeftChar}{name}");
         public void WriteBreak() => this.Write($"{TagLeftChar}{HtmlTextWriterTag.Br.ToName()}{SelfClosingTagEnd}");
