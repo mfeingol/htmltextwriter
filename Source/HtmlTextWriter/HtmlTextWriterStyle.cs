@@ -99,5 +99,4 @@ namespace System.Web.UI
         };
         public static string ToName(this HtmlTextWriterStyle attributeVal) => s_attributes[attributeVal];
     }
-
 }
