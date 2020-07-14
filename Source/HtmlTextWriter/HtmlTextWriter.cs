@@ -137,7 +137,7 @@ namespace System.Web.UI
                 this.attributes.Clear();
             }            
             
-           if ((this.styleAttributes != null) && (this.styleAttributes.Any()))
+           if (this.styleAttributes != null && this.styleAttributes.Any())
             {
                 this.Write($"{SpaceChar}{StyleDeclaringString}{EqualsDoubleQuoteString}");
                 foreach (KeyValuePair<string, string> styleAttribute in this.styleAttributes)
@@ -279,7 +279,7 @@ namespace System.Web.UI
         public void WriteStyleAttribute(string name, string value) => this.WriteStyleAttribute(name, value, true);
         public void WriteStyleAttribute(string name, string value, bool encode)
         {
-            if ((name != null) && (value != null))
+            if (name != null && value != null)
             {
                 this.Write($"{name}{StyleEqualsChar}");
                 if (encode)
