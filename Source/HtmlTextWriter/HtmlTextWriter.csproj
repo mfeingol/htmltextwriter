@@ -22,7 +22,11 @@
 
 2.0.0
 ===
-- Don't dispose inner TextWriter</PackageReleaseNotes>
+- Don't dispose inner TextWriter
+
+2.1.0
+===
+- Support AddStyleAttribute (thanks, satya706!)</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mfeingol/htmltextwriter</PackageProjectUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyVersion>2.1.0.0</AssemblyVersion>
