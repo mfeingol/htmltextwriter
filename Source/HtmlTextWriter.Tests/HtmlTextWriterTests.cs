@@ -411,7 +411,7 @@ namespace System.Web.UI.Tests
             StreamWriter sw = new StreamWriter(mem);
             HtmlTextWriter writer = new HtmlTextWriter(sw);
 
-            //Open HTML
+            // Open html
             writer.RenderBeginTag(HtmlTextWriterTag.Html);
 
             // <h2>
@@ -430,14 +430,15 @@ namespace System.Web.UI.Tests
 
             writer.Write("Hello {0}", "World");
 
-            writer.RenderEndTag(); //</h3>
-            writer.RenderEndTag(); //</p>
+            writer.RenderEndTag(); 
+            // </h3>
+            writer.RenderEndTag(); 
+            // </p>
 
             // <p>
             writer.RenderBeginTag(HtmlTextWriterTag.P);
 
-
-            //Attributes to Table
+            // Attributes to table
             writer.AddAttribute(HtmlTextWriterAttribute.Alt, "Table");
             writer.AddAttribute(HtmlTextWriterAttribute.Cellpadding, "3");
             writer.AddStyleAttribute(HtmlTextWriterStyle.BackgroundColor, bodyBackgroundColor);
@@ -447,20 +448,23 @@ namespace System.Web.UI.Tests
             writer.AddStyleAttribute(HtmlTextWriterStyle.FontSize, bodyFontSize);
             writer.AddStyleAttribute(HtmlTextWriterStyle.Width, "100%");
 
-            //start the table
+            // Start the table
             writer.RenderBeginTag(HtmlTextWriterTag.Table);
 
-            //start the rows
+            // Start the rows
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             writer.Write("HTML Sample Test Case");            
-            writer.RenderEndTag(); //</Td>
-            writer.RenderEndTag(); //</Tr>            
-            writer.RenderEndTag(); //</Table>
+            writer.RenderEndTag(); 
+            // </td>
+            writer.RenderEndTag(); 
+            // </tr>            
+            writer.RenderEndTag(); 
+            // </table>
+            writer.RenderEndTag(); 
+            // </p>
 
-            writer.RenderEndTag(); //</p>
-
-            //Attributes to Table
+            // Attributes to table
             writer.AddAttribute(HtmlTextWriterAttribute.Alt, "Table");
             writer.AddAttribute(HtmlTextWriterAttribute.Cellpadding, "3");
             writer.AddStyleAttribute(HtmlTextWriterStyle.BackgroundColor, bodyBackgroundColor);
@@ -470,7 +474,7 @@ namespace System.Web.UI.Tests
             writer.AddStyleAttribute(HtmlTextWriterStyle.FontSize, bodyFontSize);
             writer.AddStyleAttribute(HtmlTextWriterStyle.Width, "100%");
             
-            //start the table
+            // Start the table
             writer.RenderBeginTag(HtmlTextWriterTag.Table);
                         
             writer.AddStyleAttribute(HtmlTextWriterStyle.BackgroundColor, TestHeaderBackgroundColor);
@@ -480,33 +484,41 @@ namespace System.Web.UI.Tests
             
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             writer.Write("Test Scenario");
-            writer.RenderEndTag(); //</Td>
+            writer.RenderEndTag(); 
+            // </td>
 
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             writer.Write("Result");
-            writer.RenderEndTag();//</Td>
+            writer.RenderEndTag();
+            // </td>
 
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             writer.Write("Parameter A");
             writer.RenderEndTag();
+            // </td>
 
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             writer.Write("Parameter B");
-            writer.RenderEndTag();//</Td>
+            writer.RenderEndTag();
+            // </td>
 
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             writer.Write("Parameter C");
-            writer.RenderEndTag();//</Td>
+            writer.RenderEndTag();
+            // </td>
 
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             writer.Write("Parameter D");
-            writer.RenderEndTag();//</Td>
+            writer.RenderEndTag();
+            // </td>
+            
             for (var i = 1; i < 6; i++)
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Tr);
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);
                 writer.Write("Test Scenario " + i);
-                writer.RenderEndTag();//</Td>
+                writer.RenderEndTag();
+                // </td>
 
                 if (i == 1)                
                     writer.AddStyleAttribute(HtmlTextWriterStyle.BackgroundColor, TestResultStatusPass);                                
@@ -518,33 +530,41 @@ namespace System.Web.UI.Tests
 
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);
                 writer.Write("Result");
-                writer.RenderEndTag();//</Td>
+                writer.RenderEndTag();
+                // </td>
 
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);
                 writer.Write("Sample Data " + i);
-                writer.RenderEndTag();//</Td>
+                writer.RenderEndTag();
+                // </td>
 
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);
                 writer.Write("Test Data "+i);
-                writer.RenderEndTag();//</Td>
+                writer.RenderEndTag();
+                // </td>
 
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);
                 writer.Write("Random Content "+ i);
-                writer.RenderEndTag();//</Td>
+                writer.RenderEndTag();
+                // </td>
 
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);
                 writer.Write("Sample Notes " + i);
-                writer.RenderEndTag();//</Td>
+                writer.RenderEndTag();
+                // </td>
 
-                writer.RenderEndTag(); //Tr               
-            } //end for                
-            writer.RenderEndTag(); //</Tr>              
-            writer.RenderEndTag(); //</Table>
+                writer.RenderEndTag();
+                // </tr>               
+            }
+            writer.RenderEndTag();
+            // </tr>              
+            writer.RenderEndTag();
+            // </table>
 
             // <p>
             writer.RenderBeginTag(HtmlTextWriterTag.P);
 
-            //Attributes to Table
+            // Attributes to table
             writer.AddAttribute(HtmlTextWriterAttribute.Alt, "Table");
             writer.AddAttribute(HtmlTextWriterAttribute.Cellpadding, "3");
             writer.AddStyleAttribute(HtmlTextWriterStyle.BackgroundColor, bodyBackgroundColor);
@@ -554,18 +574,22 @@ namespace System.Web.UI.Tests
             writer.AddStyleAttribute(HtmlTextWriterStyle.FontSize, bodyFontSize);
             writer.AddStyleAttribute(HtmlTextWriterStyle.Width, "100%");
 
-            //start the table
+            // Start the table
             writer.RenderBeginTag(HtmlTextWriterTag.Table);
-            //start the rows
+            // Start the rows
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             writer.Write("Test Case Completed");
-            writer.RenderEndTag(); //</Td>
-            writer.RenderEndTag(); //</Tr>            
-            writer.RenderEndTag(); //</Table>
-            
-            writer.RenderEndTag(); //</p>            
-            writer.RenderEndTag(); // </html>
+            writer.RenderEndTag();
+            // </td>
+            writer.RenderEndTag();
+            // </tr>
+            writer.RenderEndTag();
+            // </table> 
+            writer.RenderEndTag();
+            // </p>
+            writer.RenderEndTag();
+            // </html>
 
             writer.Flush();
             mem.Position = 0;
