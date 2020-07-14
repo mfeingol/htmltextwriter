@@ -35,4 +35,4 @@ function Set-CsprojVersion
     Set-CsprojVersionWithPattern -version $version -path $path -element 'Version' -pattern '\<Version\>(.*)\<\/Version\>'
 }
 
-Set-CsprojVersion -version $version -path (Join-Path $pwd 'Source/System.Web.UI.HtmlTextWriter/System.Web.UI.HtmlTextWriter.csproj')
+Set-CsprojVersion -version $version -path (Join-Path $pwd 'Source/HtmlTextWriter/HtmlTextWriter.csproj')

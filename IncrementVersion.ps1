@@ -36,4 +36,4 @@ function Increment-CsprojVersion
     Increment-CsprojVersionWithPattern -path $path -element 'Version' -pattern '\<Version\>(.*)\<\/Version\>'
 }
 
-Increment-CsprojVersion -path (Join-Path $pwd 'Source/System.Web.UI.HtmlTextWriter/System.Web.UI.HtmlTextWriter.csproj')
+Increment-CsprojVersion -path (Join-Path $pwd 'Source/HtmlTextWriter/HtmlTextWriter.csproj')
