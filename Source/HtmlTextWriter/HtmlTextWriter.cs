@@ -107,7 +107,9 @@ namespace System.Web.UI
         public void AddStyleAttribute(HtmlTextWriterStyle key, string value) => this.AddStyleAttribute(key, value, true);
         public void AddStyleAttribute(HtmlTextWriterStyle key, string value, bool encode) => AddStyleAttribute(key.ToName(), value, encode);
 
-        public void AddStyleAttrbiute(string name, string value) => this.AddStyleAttribute(name, value, true);
+        [Obsolete("Typo in method name preserved for binary compatibility. Use the corrected method AddStyleAttribute(string, string).")]
+        public void AddStyleAttrbiute(string name, string value) => this.AddStyleAttribute(name, value);
+        public void AddStyleAttribute(string name, string value) => this.AddStyleAttribute(name, value, true);
         public void AddStyleAttribute(string name, string value, bool encode)
         {
             if (encode)
