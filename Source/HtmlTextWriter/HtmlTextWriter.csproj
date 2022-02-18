@@ -16,17 +16,9 @@
     <RepositoryUrl>https://github.com/mfeingol/htmltextwriter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Description>.NET Standard-compatible replacement for System.Web.UI.HtmlWriter</Description>
-    <PackageReleaseNotes>1.0.0
+    <PackageReleaseNotes>2.1.1
 ===
-- Initial Release
-
-2.0.0
-===
-- Don't dispose inner TextWriter
-
-2.1.0
-===
-- Support AddStyleAttribute (thanks, satya706!)</PackageReleaseNotes>
+- Fix AddStyleAttribute typo (thanks, @daveidmx!)</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mfeingol/htmltextwriter</PackageProjectUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyVersion>2.1.1.0</AssemblyVersion>
