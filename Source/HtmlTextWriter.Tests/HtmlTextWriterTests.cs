@@ -615,5 +615,17 @@ namespace System.Web.UI.Tests
             string html = sw.ToString();
             Assert.AreEqual("<table<tr<thRouteID</th></tr></table>", html);
         }
+
+        [TestMethod]
+        public void TestEncodedUrl()
+        {
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw, String.Empty);
+
+            writer.WriteEncodedUrl("http://localhost/SampleFolder/Sample + File.txt");
+
+            string html = sw.ToString();
+            Assert.AreEqual("http%3A%2F%2Flocalhost%2FSampleFolder%2FSample%20%2B%20File.txt", html);
+        }
     }
 }

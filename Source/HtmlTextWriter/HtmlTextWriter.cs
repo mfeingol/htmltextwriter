@@ -298,12 +298,12 @@ namespace System.Web.UI
         {
             int index = url.IndexOf('?');
             if (index != -1)
-                this.Write($"{Uri.EscapeUriString(url.Substring(0, index))}{url.Substring(index)}");
+                this.Write($"{Uri.EscapeDataString(url.Substring(0, index))}{url.Substring(index)}");
             else
-                this.Write(Uri.EscapeUriString(url));
+                this.Write(Uri.EscapeDataString(url));
         }
 
-        public void WriteEncodedUrlParameter(string urlText) => this.Write(Uri.EscapeUriString(urlText));
+        public void WriteEncodedUrlParameter(string urlText) => this.Write(Uri.EscapeDataString(urlText));
         public void WriteEndTag(string tagName) => this.Write($"{TagLeftChar}{SlashChar}{tagName}{TagRightChar}");
         public void WriteFullBeginTag(string tagName) => this.Write($"{TagLeftChar}{tagName}{TagRightChar}");
         public void WriteLineNoTabs(string line) => this.WriteLine(line);

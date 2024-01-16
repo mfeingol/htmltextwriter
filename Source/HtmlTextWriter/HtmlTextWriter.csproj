@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.4;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard1.4;netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
     <AssemblyName>HtmlTextWriter</AssemblyName>
     <RootNamespace>System.Web.UI</RootNamespace>
     <Authors>Max Feingold</Authors>
