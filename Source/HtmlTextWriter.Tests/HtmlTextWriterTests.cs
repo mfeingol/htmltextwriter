@@ -394,7 +394,7 @@ namespace System.Web.UI.Tests
             const string test = "<html />\r\n";
             Assert.AreEqual(test, html);
         }
-        
+
         [TestMethod]
         public void TestScenario3()
         {
@@ -430,9 +430,9 @@ namespace System.Web.UI.Tests
 
             writer.Write("Hello {0}", "World");
 
-            writer.RenderEndTag(); 
+            writer.RenderEndTag();
             // </h3>
-            writer.RenderEndTag(); 
+            writer.RenderEndTag();
             // </p>
 
             // <p>
@@ -454,14 +454,14 @@ namespace System.Web.UI.Tests
             // Start the rows
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
-            writer.Write("HTML Sample Test Case");            
-            writer.RenderEndTag(); 
+            writer.Write("HTML Sample Test Case");
+            writer.RenderEndTag();
             // </td>
-            writer.RenderEndTag(); 
+            writer.RenderEndTag();
             // </tr>            
-            writer.RenderEndTag(); 
+            writer.RenderEndTag();
             // </table>
-            writer.RenderEndTag(); 
+            writer.RenderEndTag();
             // </p>
 
             // Attributes to table
@@ -473,18 +473,18 @@ namespace System.Web.UI.Tests
             writer.AddStyleAttribute(HtmlTextWriterStyle.FontFamily, fontFamily);
             writer.AddStyleAttribute(HtmlTextWriterStyle.FontSize, bodyFontSize);
             writer.AddStyleAttribute(HtmlTextWriterStyle.Width, "100%");
-            
+
             // Start the table
             writer.RenderBeginTag(HtmlTextWriterTag.Table);
-                        
+
             writer.AddStyleAttribute(HtmlTextWriterStyle.BackgroundColor, TestHeaderBackgroundColor);
             writer.AddStyleAttribute(HtmlTextWriterStyle.FontSize, bodyResultFontSize);
-            writer.AddStyleAttribute(HtmlTextWriterStyle.FontWeight, "Bold");            
+            writer.AddStyleAttribute(HtmlTextWriterStyle.FontWeight, "Bold");
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
-            
+
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             writer.Write("Test Scenario");
-            writer.RenderEndTag(); 
+            writer.RenderEndTag();
             // </td>
 
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
@@ -511,7 +511,7 @@ namespace System.Web.UI.Tests
             writer.Write("Parameter D");
             writer.RenderEndTag();
             // </td>
-            
+
             for (var i = 1; i < 6; i++)
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Tr);
@@ -520,11 +520,11 @@ namespace System.Web.UI.Tests
                 writer.RenderEndTag();
                 // </td>
 
-                if (i == 1)                
-                    writer.AddStyleAttribute(HtmlTextWriterStyle.BackgroundColor, TestResultStatusPass);                                
-                else if (i == 3)                
+                if (i == 1)
+                    writer.AddStyleAttribute(HtmlTextWriterStyle.BackgroundColor, TestResultStatusPass);
+                else if (i == 3)
                     writer.AddStyleAttribute(HtmlTextWriterStyle.BackgroundColor, TestResultStatusFail);
-                
+
                 writer.AddStyleAttribute(HtmlTextWriterStyle.FontSize, bodyResultFontSize);
                 writer.AddStyleAttribute(HtmlTextWriterStyle.FontWeight, "Bold");
 
@@ -539,12 +539,12 @@ namespace System.Web.UI.Tests
                 // </td>
 
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);
-                writer.Write("Test Data "+i);
+                writer.Write("Test Data " + i);
                 writer.RenderEndTag();
                 // </td>
 
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);
-                writer.Write("Random Content "+ i);
+                writer.Write("Random Content " + i);
                 writer.RenderEndTag();
                 // </td>
 
@@ -598,6 +598,22 @@ namespace System.Web.UI.Tests
 
             const string test = "<html>\r\n\t<h2 align=\"center\">\r\n\t\tTestScenario3\r\n\t</h2>\r\n\t<p>\r\n\t\t<h3 align=\"center\">\r\n\t\t\tHello World\r\n\t\t</h3>\r\n\t</p>\r\n\t<p>\r\n\t\t<table alt=\"Table\" cellpadding=\"3\" style=\"Background-Color:#E6FFFF; Border-Color:#C1CDC1; Border-Style:solid; Font-Family:Arial; Font-Size:13; Width:100%; \">\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tHTML Sample Test Case\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</table>\r\n\t</p>\r\n\t<table alt=\"Table\" cellpadding=\"3\" style=\"Background-Color:#E6FFFF; Border-Color:#C1CDC1; Border-Style:solid; Font-Family:Arial; Font-Size:13; Width:100%; \">\r\n\t\t<tr style=\"Background-Color:#FFF59D; Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t<td>\r\n\t\t\t\tTest Scenario\r\n\t\t\t</td>\r\n\t\t\t<td>\r\n\t\t\t\tResult\r\n\t\t\t</td>\r\n\t\t\t<td>\r\n\t\t\t\tParameter A\r\n\t\t\t</td>\r\n\t\t\t<td>\r\n\t\t\t\tParameter B\r\n\t\t\t</td>\r\n\t\t\t<td>\r\n\t\t\t\tParameter C\r\n\t\t\t</td>\r\n\t\t\t<td>\r\n\t\t\t\tParameter D\r\n\t\t\t</td>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Scenario 1\r\n\t\t\t\t</td>\r\n\t\t\t\t<td style=\"Background-Color:#66FF66; Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t\t\tResult\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Data 1\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Data 1\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tRandom Content 1\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Notes 1\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Scenario 2\r\n\t\t\t\t</td>\r\n\t\t\t\t<td style=\"Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t\t\tResult\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Data 2\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Data 2\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tRandom Content 2\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Notes 2\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Scenario 3\r\n\t\t\t\t</td>\r\n\t\t\t\t<td style=\"Background-Color:#FF0000; Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t\t\tResult\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Data 3\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Data 3\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tRandom Content 3\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Notes 3\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Scenario 4\r\n\t\t\t\t</td>\r\n\t\t\t\t<td style=\"Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t\t\tResult\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Data 4\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Data 4\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tRandom Content 4\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Notes 4\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Scenario 5\r\n\t\t\t\t</td>\r\n\t\t\t\t<td style=\"Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t\t\tResult\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Data 5\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Data 5\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tRandom Content 5\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Notes 5\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</tr>\r\n\t</table>\r\n\t<p>\r\n\t\t<table alt=\"Table\" cellpadding=\"3\" style=\"Background-Color:#E6FFFF; Border-Color:#C1CDC1; Border-Style:solid; Font-Family:Arial; Font-Size:13; Width:100%; \">\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Case Completed\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</table>\r\n\t</p>\r\n</html>\r\n";
             Assert.AreEqual(test, html);
-        }        
+        }
+
+        [TestMethod]
+        public void TestWriteBeginEndTag()
+        {
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw, String.Empty);
+
+            writer.WriteBeginTag("table");
+            writer.WriteBeginTag("tr");
+            writer.WriteBeginTag("th"); writer.Write("RouteID"); writer.WriteEndTag("th");
+            writer.WriteEndTag("tr");
+            writer.WriteEndTag("table");
+
+            string html = sw.ToString();
+            Assert.AreEqual("<table<tr<thRouteID</th></tr></table>", html);
+        }
     }
 }
