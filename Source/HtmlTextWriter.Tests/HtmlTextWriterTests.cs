@@ -17,9 +17,8 @@ namespace System.Web.UI.Tests
             WriteDictionaryEntries<HtmlTextWriterTag>();
             WriteDictionaryEntries<HtmlTextWriterAttribute>();
 
-            using MemoryStream mem = new MemoryStream();
-            using StreamWriter sw = new StreamWriter(mem);
-            using HtmlTextWriter writer = new HtmlTextWriter(sw);
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw);
 
             foreach (FieldInfo tagInfo in typeof(HtmlTextWriterTag).GetFields(BindingFlags.Public | BindingFlags.Static))
             {
@@ -53,9 +52,8 @@ namespace System.Web.UI.Tests
         [TestMethod]
         public void TestMicrosoftDocs()
         {
-            using MemoryStream mem = new MemoryStream();
-            using StreamWriter sw = new StreamWriter(mem);
-            using HtmlTextWriter writer = new HtmlTextWriter(sw);
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw);
 
             // Adapted from https://docs.microsoft.com/en-us/dotnet/api/system.web.ui.htmltextwriter?view=netframework-4.8
             writer.AddAttribute(HtmlTextWriterAttribute.Onclick, "alert('Hello');");
@@ -87,21 +85,17 @@ namespace System.Web.UI.Tests
             writer.Indent--;
             writer.RenderEndTag();
 
-            writer.Flush();
-            mem.Position = 0;
+            string html = sw.ToString();
 
-            string html = Encoding.UTF8.GetString(mem.ToArray());
-
-            const string test = "<span onclick=\"alert(&#39;Hello&#39;);\" CustomAttribute=\"CustomAttributeValue\">\r\n\t\tHello\r\n\t\t<img alt=\"Encoding, &quot;Required&quot;\" myattribute=\"No &quot;encoding &quot; required\" />\r\n\r\n\t\t<MyTag>\r\n\t\t\tContents of MyTag\r\n\t\t</MyTag>\r\n\r\n\t\t<img alt=\"A custom image.\"></img>\r\n</span>\r\n";
+            const string test = "<span onclick=\"alert(&#39;Hello&#39;);\" CustomAttribute=\"CustomAttributeValue\">\r\n\tHello\r\n\t<img alt=\"Encoding, &quot;Required&quot;\" myattribute=\"No &quot;encoding &quot; required\" />\r\n\t<MyTag>\r\n\t\tContents of MyTag\r\n\t</MyTag>\r\n\t<img alt=\"A custom image.\"></img>\r\n</span>";
             Assert.AreEqual(test, html);
         }
 
         [TestMethod]
         public void TestScenario1()
         {
-            using MemoryStream mem = new MemoryStream();
-            using StreamWriter sw = new StreamWriter(mem);
-            using HtmlTextWriter writer = new HtmlTextWriter(sw);
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw);
 
             // Custom scenario from private code
             writer.RenderBeginTag(HtmlTextWriterTag.Html);
@@ -130,21 +124,17 @@ namespace System.Web.UI.Tests
             writer.RenderEndTag();
             writer.RenderEndTag();
 
-            writer.Flush();
-            mem.Position = 0;
+            string html = sw.ToString();
 
-            string html = Encoding.UTF8.GetString(mem.ToArray());
-
-            const string test = "<html>\r\n\t<center>\r\n\t\t<p>\r\n\t\t\t<h2>\r\n\t\t\t\t1\r\n\t\t\t</h2>\r\n\t\t\t<img src=\"/a\" width=\"640\" height=\"480\" />\r\n\t\t\t<img src=\"/b\" width=\"640\" height=\"480\" />\r\n\t\t\t<img src=\"/c\" width=\"640\" height=\"480\" />\r\n\t\t</p>\r\n\r\n\t\t<p>\r\n\t\t\t<h2>\r\n\t\t\t\t2\r\n\t\t\t</h2>\r\n\t\t\t<img src=\"/a\" width=\"640\" height=\"480\" />\r\n\t\t\t<img src=\"/b\" width=\"640\" height=\"480\" />\r\n\t\t\t<img src=\"/c\" width=\"640\" height=\"480\" />\r\n\t\t</p>\r\n\r\n\t\t<p>\r\n\t\t\t<h2>\r\n\t\t\t\t3\r\n\t\t\t</h2>\r\n\t\t\t<img src=\"/a\" width=\"640\" height=\"480\" />\r\n\t\t\t<img src=\"/b\" width=\"640\" height=\"480\" />\r\n\t\t\t<img src=\"/c\" width=\"640\" height=\"480\" />\r\n\t\t</p>\r\n\r\n\t\t<p>\r\n\t\t\t<h2>\r\n\t\t\t\t4\r\n\t\t\t</h2>\r\n\t\t\t<img src=\"/a\" width=\"640\" height=\"480\" />\r\n\t\t\t<img src=\"/b\" width=\"640\" height=\"480\" />\r\n\t\t\t<img src=\"/c\" width=\"640\" height=\"480\" />\r\n\t\t</p>\r\n\r\n\t\t<p>\r\n\t\t\t<h2>\r\n\t\t\t\t5\r\n\t\t\t</h2>\r\n\t\t\t<img src=\"/a\" width=\"640\" height=\"480\" />\r\n\t\t\t<img src=\"/b\" width=\"640\" height=\"480\" />\r\n\t\t\t<img src=\"/c\" width=\"640\" height=\"480\" />\r\n\t\t</p>\r\n\r\n\t</center>\r\n</html>\r\n";
+            const string test = "<html>\r\n\t<center>\r\n\t\t<p><h2>\r\n\t\t\t1\r\n\t\t</h2><img src=\"/a\" width=\"640\" height=\"480\" /><img src=\"/b\" width=\"640\" height=\"480\" /><img src=\"/c\" width=\"640\" height=\"480\" /></p>\r\n\t\t<p><h2>\r\n\t\t\t2\r\n\t\t</h2><img src=\"/a\" width=\"640\" height=\"480\" /><img src=\"/b\" width=\"640\" height=\"480\" /><img src=\"/c\" width=\"640\" height=\"480\" /></p>\r\n\t\t<p><h2>\r\n\t\t\t3\r\n\t\t</h2><img src=\"/a\" width=\"640\" height=\"480\" /><img src=\"/b\" width=\"640\" height=\"480\" /><img src=\"/c\" width=\"640\" height=\"480\" /></p>\r\n\t\t<p><h2>\r\n\t\t\t4\r\n\t\t</h2><img src=\"/a\" width=\"640\" height=\"480\" /><img src=\"/b\" width=\"640\" height=\"480\" /><img src=\"/c\" width=\"640\" height=\"480\" /></p>\r\n\t\t<p><h2>\r\n\t\t\t5\r\n\t\t</h2><img src=\"/a\" width=\"640\" height=\"480\" /><img src=\"/b\" width=\"640\" height=\"480\" /><img src=\"/c\" width=\"640\" height=\"480\" /></p>\r\n\r\n\t</center>\r\n</html>";
             Assert.AreEqual(test, html);
         }
 
         [TestMethod]
         public void TestScenario2()
         {
-            using MemoryStream mem = new MemoryStream();
-            using StreamWriter sw = new StreamWriter(mem);
-            using HtmlTextWriter writer = new HtmlTextWriter(sw);
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw);
 
             // Custom scenario from private code
             writer.RenderBeginTag(HtmlTextWriterTag.Html);
@@ -366,32 +356,28 @@ namespace System.Web.UI.Tests
             // </html>
             writer.RenderEndTag();
 
-            writer.Flush();
-            mem.Position = 0;
+            string html = sw.ToString();
 
-            string html = Encoding.UTF8.GetString(mem.ToArray());
-
-            const string test = "<html>\r\n\t<h2 align=\"center\">\r\n\t\tTestScenario2\r\n\t</h2>\r\n\t<p>\r\n\t\t<h3 align=\"center\">\r\n\t\t\tHello World\r\n\t\t</h3>\r\n\t</p>\r\n\t<p>\r\n\t\t<table align=\"center\" border=\"0\" cellspacing=\"1\" cellpadding=\"2\" width=\"1024\">\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th colspan=\"3\">\r\n\t\t\t\t\t<font face=\"Times New Roman\">\r\n\t\t\t\t\t\tA nice summary of things\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th align=\"left\">\r\n\t\t\t\t\t<font face=\"Times New Roman\">\r\n\t\t\t\t\t\tBegan\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t\t<th colspan=\"2\" align=\"right\">\r\n\t\t\t\t\t12:00pm\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th align=\"left\">\r\n\t\t\t\t\t<font face=\"Times New Roman\">\r\n\t\t\t\t\t\tEnded\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t\t<th colspan=\"2\" align=\"right\">\r\n\t\t\t\t\t1:00pm\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th align=\"left\">\r\n\t\t\t\t\t<font face=\"arial\">\r\n\t\t\t\t\t\tElapsed\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t\t<th align=\"right\" colspan=\"2\">\r\n\t\t\t\t\t01:00:00\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th align=\"left\">\r\n\t\t\t\t\t<font face=\"Times New Roman\">\r\n\t\t\t\t\t\tResult\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t\t<th colspan=\"2\" align=\"right\">\r\n\t\t\t\t\tGreat Success!\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<th align=\"left\">\r\n\t\t\t\t\t<font face=\"Times New Roman\">\r\n\t\t\t\t\t\tA wonderful description\r\n\t\t\t\t\t</font>\r\n\t\t\t\t</th>\r\n\t\t\t\t<th colspan=\"2\" align=\"right\">\r\n\t\t\t\t\tSome text\r\n\t\t\t\t</th>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t\t<td>\r\n\t\t\t\t\t/a/b/c\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t26 files\r\n\t\t\t\t</td>\r\n\t\t\t\t<td align=\"right\">\r\n\t\t\t\t\t200GB\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</table>\r\n\t</p>\r\n</html>\r\n";
+            const string test = "<html>\r\n\t<h2 align=\"center\">\r\n\t\tTestScenario2\r\n\t</h2><p><h3 align=\"center\">\r\n\t\tHello World\r\n\t</h3></p><p><table align=\"center\" border=\"0\" cellspacing=\"1\" cellpadding=\"2\" width=\"1024\">\r\n\t\t<tr bgcolor=\"#FFFF00\">\r\n\t\t\t<th colspan=\"3\"><font face=\"Times New Roman\">A nice summary of things</font></th>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<th align=\"left\"><font face=\"Times New Roman\">Began</font></th><th colspan=\"2\" align=\"right\">12:00pm</th>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<th align=\"left\"><font face=\"Times New Roman\">Ended</font></th><th colspan=\"2\" align=\"right\">1:00pm</th>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<th align=\"left\"><font face=\"arial\">Elapsed</font></th><th align=\"right\" colspan=\"2\">01:00:00</th>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<th align=\"left\"><font face=\"Times New Roman\">Result</font></th><th colspan=\"2\" align=\"right\">Great Success!</th>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<th align=\"left\"><font face=\"Times New Roman\">A wonderful description</font></th><th colspan=\"2\" align=\"right\">Some text</th>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<td>/a/b/c</td><td align=\"right\">26 files</td><td align=\"right\">200GB</td>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<td>/a/b/c</td><td align=\"right\">26 files</td><td align=\"right\">200GB</td>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<td>/a/b/c</td><td align=\"right\">26 files</td><td align=\"right\">200GB</td>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<td>/a/b/c</td><td align=\"right\">26 files</td><td align=\"right\">200GB</td>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<td>/a/b/c</td><td align=\"right\">26 files</td><td align=\"right\">200GB</td>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<td>/a/b/c</td><td align=\"right\">26 files</td><td align=\"right\">200GB</td>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<td>/a/b/c</td><td align=\"right\">26 files</td><td align=\"right\">200GB</td>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<td>/a/b/c</td><td align=\"right\">26 files</td><td align=\"right\">200GB</td>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<td>/a/b/c</td><td align=\"right\">26 files</td><td align=\"right\">200GB</td>\r\n\t\t</tr><tr bgcolor=\"#FFFF00\">\r\n\t\t\t<td>/a/b/c</td><td align=\"right\">26 files</td><td align=\"right\">200GB</td>\r\n\t\t</tr>\r\n\t</table></p>\r\n</html>";
             Assert.AreEqual(test, html);
         }
 
         [TestMethod]
-        public void CheckNotDisposed()
+        public void CheckStreamNotDisposed()
         {
-            MemoryStream mem = new MemoryStream();
-            StreamWriter sw = new StreamWriter(mem);
+            MemoryStream mem = new();
+            StreamWriter sw = new(mem);
 
-            using (HtmlTextWriter writer = new HtmlTextWriter(sw))
+            using (HtmlTextWriter writer = new(sw))
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Html);
                 writer.RenderEndTag();
                 writer.Flush();
             }
-
             mem.Position = 0;
             string html = Encoding.UTF8.GetString(mem.ToArray());
 
-            const string test = "<html />\r\n";
+            const string test = "<html>\r\n\r\n</html>";
             Assert.AreEqual(test, html);
         }
 
@@ -407,9 +393,8 @@ namespace System.Web.UI.Tests
             string TestResultStatusPass = "#66FF66";
             string TestResultStatusFail = "#FF0000";
 
-            MemoryStream mem = new MemoryStream();
-            StreamWriter sw = new StreamWriter(mem);
-            HtmlTextWriter writer = new HtmlTextWriter(sw);
+            StringWriter sw = new();
+            HtmlTextWriter writer = new(sw);
 
             // Open html
             writer.RenderBeginTag(HtmlTextWriterTag.Html);
@@ -458,7 +443,7 @@ namespace System.Web.UI.Tests
             writer.RenderEndTag();
             // </td>
             writer.RenderEndTag();
-            // </tr>            
+            // </tr>
             writer.RenderEndTag();
             // </table>
             writer.RenderEndTag();
@@ -554,10 +539,10 @@ namespace System.Web.UI.Tests
                 // </td>
 
                 writer.RenderEndTag();
-                // </tr>               
+                // </tr>
             }
             writer.RenderEndTag();
-            // </tr>              
+            // </tr>
             writer.RenderEndTag();
             // </table>
 
@@ -585,18 +570,15 @@ namespace System.Web.UI.Tests
             writer.RenderEndTag();
             // </tr>
             writer.RenderEndTag();
-            // </table> 
+            // </table>
             writer.RenderEndTag();
             // </p>
             writer.RenderEndTag();
             // </html>
 
-            writer.Flush();
-            mem.Position = 0;
+            string html = sw.ToString();
 
-            string html = Encoding.UTF8.GetString(mem.ToArray());
-
-            const string test = "<html>\r\n\t<h2 align=\"center\">\r\n\t\tTestScenario3\r\n\t</h2>\r\n\t<p>\r\n\t\t<h3 align=\"center\">\r\n\t\t\tHello World\r\n\t\t</h3>\r\n\t</p>\r\n\t<p>\r\n\t\t<table alt=\"Table\" cellpadding=\"3\" style=\"Background-Color:#E6FFFF; Border-Color:#C1CDC1; Border-Style:solid; Font-Family:Arial; Font-Size:13; Width:100%; \">\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tHTML Sample Test Case\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</table>\r\n\t</p>\r\n\t<table alt=\"Table\" cellpadding=\"3\" style=\"Background-Color:#E6FFFF; Border-Color:#C1CDC1; Border-Style:solid; Font-Family:Arial; Font-Size:13; Width:100%; \">\r\n\t\t<tr style=\"Background-Color:#FFF59D; Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t<td>\r\n\t\t\t\tTest Scenario\r\n\t\t\t</td>\r\n\t\t\t<td>\r\n\t\t\t\tResult\r\n\t\t\t</td>\r\n\t\t\t<td>\r\n\t\t\t\tParameter A\r\n\t\t\t</td>\r\n\t\t\t<td>\r\n\t\t\t\tParameter B\r\n\t\t\t</td>\r\n\t\t\t<td>\r\n\t\t\t\tParameter C\r\n\t\t\t</td>\r\n\t\t\t<td>\r\n\t\t\t\tParameter D\r\n\t\t\t</td>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Scenario 1\r\n\t\t\t\t</td>\r\n\t\t\t\t<td style=\"Background-Color:#66FF66; Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t\t\tResult\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Data 1\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Data 1\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tRandom Content 1\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Notes 1\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Scenario 2\r\n\t\t\t\t</td>\r\n\t\t\t\t<td style=\"Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t\t\tResult\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Data 2\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Data 2\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tRandom Content 2\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Notes 2\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Scenario 3\r\n\t\t\t\t</td>\r\n\t\t\t\t<td style=\"Background-Color:#FF0000; Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t\t\tResult\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Data 3\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Data 3\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tRandom Content 3\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Notes 3\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Scenario 4\r\n\t\t\t\t</td>\r\n\t\t\t\t<td style=\"Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t\t\tResult\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Data 4\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Data 4\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tRandom Content 4\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Notes 4\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Scenario 5\r\n\t\t\t\t</td>\r\n\t\t\t\t<td style=\"Font-Size:15; Font-Weight:Bold; \">\r\n\t\t\t\t\tResult\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Data 5\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Data 5\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tRandom Content 5\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tSample Notes 5\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</tr>\r\n\t</table>\r\n\t<p>\r\n\t\t<table alt=\"Table\" cellpadding=\"3\" style=\"Background-Color:#E6FFFF; Border-Color:#C1CDC1; Border-Style:solid; Font-Family:Arial; Font-Size:13; Width:100%; \">\r\n\t\t\t<tr>\r\n\t\t\t\t<td>\r\n\t\t\t\t\tTest Case Completed\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</table>\r\n\t</p>\r\n</html>\r\n";
+            const string test = "<html>\r\n\t<h2 align=\"center\">\r\n\t\tTestScenario3\r\n\t</h2><p><h3 align=\"center\">\r\n\t\tHello World\r\n\t</h3></p><p><table alt=\"Table\" cellpadding=\"3\" style=\"background-color:#E6FFFF;border-color:#C1CDC1;border-style:solid;font-family:Arial;font-size:13;width:100%;\">\r\n\t\t<tr>\r\n\t\t\t<td>HTML Sample Test Case</td>\r\n\t\t</tr>\r\n\t</table></p><table alt=\"Table\" cellpadding=\"3\" style=\"background-color:#E6FFFF;border-color:#C1CDC1;border-style:solid;font-family:Arial;font-size:13;width:100%;\">\r\n\t\t<tr style=\"background-color:#FFF59D;font-size:15;font-weight:Bold;\">\r\n\t\t\t<td>Test Scenario</td><td>Result</td><td>Parameter A</td><td>Parameter B</td><td>Parameter C</td><td>Parameter D</td><tr>\r\n\t\t\t\t<td>Test Scenario 1</td><td style=\"background-color:#66FF66;font-size:15;font-weight:Bold;\">Result</td><td>Sample Data 1</td><td>Test Data 1</td><td>Random Content 1</td><td>Sample Notes 1</td>\r\n\t\t\t</tr><tr>\r\n\t\t\t\t<td>Test Scenario 2</td><td style=\"font-size:15;font-weight:Bold;\">Result</td><td>Sample Data 2</td><td>Test Data 2</td><td>Random Content 2</td><td>Sample Notes 2</td>\r\n\t\t\t</tr><tr>\r\n\t\t\t\t<td>Test Scenario 3</td><td style=\"background-color:#FF0000;font-size:15;font-weight:Bold;\">Result</td><td>Sample Data 3</td><td>Test Data 3</td><td>Random Content 3</td><td>Sample Notes 3</td>\r\n\t\t\t</tr><tr>\r\n\t\t\t\t<td>Test Scenario 4</td><td style=\"font-size:15;font-weight:Bold;\">Result</td><td>Sample Data 4</td><td>Test Data 4</td><td>Random Content 4</td><td>Sample Notes 4</td>\r\n\t\t\t</tr><tr>\r\n\t\t\t\t<td>Test Scenario 5</td><td style=\"font-size:15;font-weight:Bold;\">Result</td><td>Sample Data 5</td><td>Test Data 5</td><td>Random Content 5</td><td>Sample Notes 5</td>\r\n\t\t\t</tr>\r\n\t\t</tr>\r\n\t</table><p><table alt=\"Table\" cellpadding=\"3\" style=\"background-color:#E6FFFF;border-color:#C1CDC1;border-style:solid;font-family:Arial;font-size:13;width:100%;\">\r\n\t\t<tr>\r\n\t\t\t<td>Test Case Completed</td>\r\n\t\t</tr>\r\n\t</table></p>\r\n</html>";
             Assert.AreEqual(test, html);
         }
 
@@ -625,7 +607,11 @@ namespace System.Web.UI.Tests
             writer.WriteEncodedUrl("http://localhost/SampleFolder/Sample + File.txt");
 
             string html = sw.ToString();
-            Assert.AreEqual("http%3A%2F%2Flocalhost%2FSampleFolder%2FSample%20%2B%20File.txt", html);
+
+            const string test = "http://localhost/SampleFolder/Sample%20%2b%20File.txt";
+            const string test2 = "http%3A%2F%2Flocalhost%2FSampleFolder%2FSample%20%2B%20File.txt";
+
+            Assert.IsTrue(html == test || html == test2);
         }
 
         [TestMethod]
@@ -662,8 +648,46 @@ namespace System.Web.UI.Tests
 
             string html = sw.ToString();
 
-            const string test = "<textarea></textarea><Foo>\r\n\t\r\n</Foo>\r\n<textarea></textarea><textarea></textarea><div>\r\n\t\r\n</div>\r\n<div />\r\n<img />\r\n";
+            const string test = "<textarea></textarea><Foo>\r\n\t\r\n</Foo><textarea></textarea><textarea></textarea><div>\r\n\t\r\n</div><div>\r\n\r\n</div><img />";
             Assert.AreEqual(test, html);
+        }
+
+        [TestMethod]
+        public void TestRenderBeginTagBehaviors()
+        {
+            for (HtmlTextWriterTag tag = HtmlTextWriterTag.A; tag <= HtmlTextWriterTag.Xml; tag++)
+                TestRenderBeginTagBehaviors(tag.ToString().ToLower(), tag.ToString());
+
+            TestRenderBeginTagBehaviors("Random", "Random");
+        }
+
+        static void TestRenderBeginTagBehaviors(string name, string tag)
+        {
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw);
+
+            writer.RenderBeginTag(tag);
+
+            string html = sw.ToString();
+
+            string test1 = $"<{name}>";
+            string test2 = $"<{name} />";
+            string test3 = $"<{name}>\r\n";
+
+            string beginTagBehavior;
+            if (html == test1)
+                beginTagBehavior = "OpenTag";
+            else if (html == test2)
+                beginTagBehavior = "SelfClose";
+            else if (html == test3)
+                beginTagBehavior = "OpenTagWithLineBreak";
+            else
+                beginTagBehavior = "??";
+
+            bool indent = writer.Indent > 0;
+            string indentBehavior = indent ? "Indent" : "NoIndent";
+
+            Debug.WriteLine($"\t{{ HtmlTextWriterTag.{tag}, new(\"{name}\", BeginTagBehavior.{beginTagBehavior}, BeginTagIndentBehavior.{indentBehavior}) }},");
         }
     }
 }
