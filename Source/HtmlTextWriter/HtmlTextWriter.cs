@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -98,9 +97,7 @@ namespace System.Web.UI
             if (encode)
                 value = WebUtility.HtmlEncode(value);
 
-            if (this.attributes == null)
-                this.attributes = new List<KeyValuePair<string, string>>();
-
+            this.attributes ??= [];
             this.attributes.Add(new KeyValuePair<string, string>(name, value));
         }        
         public void AddStyleAttribute(HtmlTextWriterStyle key, string value) => this.AddStyleAttribute(key, value, true);
@@ -114,9 +111,7 @@ namespace System.Web.UI
             if (encode)
                 value = WebUtility.HtmlEncode(value);
 
-            if (this.styleAttributes == null)
-                this.styleAttributes = new List<KeyValuePair<string, string>>();
-
+            this.styleAttributes ??= [];
             this.styleAttributes.Add(new KeyValuePair<string, string>(name, value));
         }        
 
@@ -147,7 +142,7 @@ namespace System.Web.UI
                 this.attributes.Clear();
             }            
             
-           if (this.styleAttributes != null && this.styleAttributes.Any())
+           if (this.styleAttributes != null && this.styleAttributes.Count == 0)
             {
                 this.Write($"{SpaceChar}{StyleDeclaringString}{EqualsDoubleQuoteString}");
                 foreach (KeyValuePair<string, string> styleAttribute in this.styleAttributes)
@@ -180,7 +175,7 @@ namespace System.Web.UI
 
         public void RenderEndTag()
         {
-            if (this.openTags == null || !this.openTags.Any())
+            if (this.openTags == null || this.openTags.Count == 0)
                 throw new InvalidOperationException();
 
             TagMetadata metadata = this.openTags.Pop();
