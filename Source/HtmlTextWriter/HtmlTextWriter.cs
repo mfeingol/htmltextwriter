@@ -157,7 +157,7 @@ namespace System.Web.UI
                 this.styleAttributes.Clear();
             }
 
-            switch (metadata.Behavior)
+            switch (metadata.OpenBehavior)
             {
                 case BeginTagBehavior.OpenTag:
                     this.Write(TagRightChar);
@@ -174,7 +174,8 @@ namespace System.Web.UI
             this.openTags ??= new();
             this.openTags.Push(metadata);
 
-            this.Indent++;
+            if (metadata.IndentBehavior == BeginTagIndentBehavior.Indent)
+                this.Indent++;
         }
 
         public void RenderEndTag()
@@ -183,9 +184,11 @@ namespace System.Web.UI
                 throw new InvalidOperationException();
 
             TagMetadata metadata = this.openTags.Pop();
-            this.Indent--;
 
-            switch (metadata.Behavior)
+            if (metadata.IndentBehavior == BeginTagIndentBehavior.Indent)
+                this.Indent--;
+
+            switch (metadata.OpenBehavior)
             {
                 case BeginTagBehavior.OpenTag:
                     this.Write($"{EndTagLeftChars}{metadata.Name}{TagRightChar}");

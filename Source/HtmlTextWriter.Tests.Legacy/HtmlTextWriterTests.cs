@@ -656,12 +656,12 @@ namespace System.Web.UI.Tests
         public void TestRenderBeginTagBehaviors()
         {
             for (HtmlTextWriterTag tag = HtmlTextWriterTag.A; tag <= HtmlTextWriterTag.Xml; tag++)
-                TestRenderBeginTagBehaviors(tag.ToString().ToLowerInvariant());
+                TestRenderBeginTagBehaviors(tag.ToString().ToLower(), tag.ToString());
 
-            TestRenderBeginTagBehaviors("Random");
+            TestRenderBeginTagBehaviors("Random", "Random");
         }
 
-        static void TestRenderBeginTagBehaviors(string tag)
+        static void TestRenderBeginTagBehaviors(string name, string tag)
         {
             using StringWriter sw = new();
             using HtmlTextWriter writer = new(sw);
@@ -670,18 +670,24 @@ namespace System.Web.UI.Tests
 
             string html = sw.ToString();
 
-            string test1 = $"<{tag}>";
-            string test2 = $"<{tag} />";
-            string test3 = $"<{tag}>\r\n";
+            string test1 = $"<{name}>";
+            string test2 = $"<{name} />";
+            string test3 = $"<{name}>\r\n";
 
+            string beginTagBehavior;
             if (html == test1)
-                Debug.WriteLine($"\t{{ HtmlTextWriterTag.{tag}, new(\"{tag}\", BeginTagBehavior.OpenTag) }},");
+                beginTagBehavior = "OpenTag";
             else if (html == test2)
-                Debug.WriteLine($"\t{{ HtmlTextWriterTag.{tag}, new(\"{tag}\", BeginTagBehavior.SelfClose) }},");
+                beginTagBehavior = "SelfClose";
             else if (html == test3)
-                Debug.WriteLine($"\t{{ HtmlTextWriterTag.{tag}, new(\"{tag}\", BeginTagBehavior.OpenTagWithLineBreak) }},");
+                beginTagBehavior = "OpenTagWithLineBreak";
             else
-                Debug.WriteLine($"{tag} - ???: {html}");
+                beginTagBehavior = "??";
+
+            bool indent = writer.Indent > 0;
+            string indentBehavior = indent ? "Indent" : "NoIndent";
+
+            Debug.WriteLine($"\t{{ HtmlTextWriterTag.{tag}, new(\"{name}\", BeginTagBehavior.{beginTagBehavior}, BeginTagIndentBehavior.{indentBehavior}) }},");
         }
     }
 }
