@@ -29,13 +29,13 @@ namespace System.Web.UI
         public const char StyleEqualsChar = ':';
         public const char TagLeftChar = '<';
         public const char TagRightChar = '>';        
-        public const string StyleDeclaringString = "style";        
+        public const string StyleDeclaringString = "style";
 
         //
         // Members
         //
 
-        string tabString = DefaultTabString;
+        readonly string tabString = DefaultTabString;
 
         Stack<TagMetadata> openTags;
         List<KeyValuePair<string, string>> attributes;        
@@ -273,11 +273,11 @@ namespace System.Web.UI
         {
             if (name != null && value != null)
             {
-                this.Write($"{name}{StyleEqualsChar}");
+                this.Write($"{name.ToLowerInvariant()}{StyleEqualsChar}");
                 if (encode)
                     value = WebUtility.HtmlEncode(value);
                                
-                this.Write($"{value}{SemicolonChar}{SpaceChar}");
+                this.Write($"{value}{SemicolonChar}");
             }
         }       
 
