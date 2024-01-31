@@ -6,7 +6,7 @@
     <RootNamespace>System.Web.UI</RootNamespace>
     <Authors>Max Feingold</Authors>
     <Company>Max Feingold</Company>
-    <Version>2.1.1</Version>
+    <Version>3.0.0</Version>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -17,13 +17,13 @@
     <RepositoryUrl>https://github.com/mfeingol/htmltextwriter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Description>.NET Standard-compatible replacement for System.Web.UI.HtmlWriter</Description>
-    <PackageReleaseNotes>2.1.1
+    <PackageReleaseNotes>3.0.0
 ===
-- Fix AddStyleAttribute typo (thanks, @daveidmx!)</PackageReleaseNotes>
+- Update tag rendering and whitespace/linebreak handling to match legacy HtmlTextWriter</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mfeingol/htmltextwriter</PackageProjectUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyVersion>2.1.1.0</AssemblyVersion>
-    <FileVersion>2.1.1.0</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
