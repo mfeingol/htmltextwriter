@@ -125,9 +125,18 @@ namespace System.Web.UI
         // Tags
         //
 
-        public void RenderBeginTag(HtmlTextWriterTag tagKey) => this.RenderBeginTag(tagKey.ToName());
+        public void RenderBeginTag(HtmlTextWriterTag tagKey) => this.RenderBeginTagInternal(tagKey.ToName());
 
         public void RenderBeginTag(string name)
+        {
+            string lower = name.ToLowerInvariant();
+            if (name != lower && lower.IsName())
+                name = lower;
+
+            this.RenderBeginTagInternal(name);
+        }
+
+        void RenderBeginTagInternal(string name)
         {
             this.WriteBeginTag(name);
 

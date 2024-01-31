@@ -107,7 +107,7 @@ namespace System.Web.UI
 
     public static class HtmlTextWriterTagExtensions
     {
-        static Dictionary<HtmlTextWriterTag, string> s_attributes = new Dictionary<HtmlTextWriterTag, string>
+        static readonly Dictionary<HtmlTextWriterTag, string> s_attributes = new()
         {
             { HtmlTextWriterTag.A, "a" },
             { HtmlTextWriterTag.Acronym, "acronym" },
@@ -207,6 +207,9 @@ namespace System.Web.UI
             { HtmlTextWriterTag.Xml, "xml" },
         };
 
-        public static string ToName(this HtmlTextWriterTag attribute) => s_attributes[attribute];
+        static readonly HashSet<string> s_names = new(s_attributes.Values);
+
+        public static string ToName(this HtmlTextWriterTag tag) => s_attributes[tag];
+        public static bool IsName(this string tag) => s_names.Contains(tag);
     }
 }
