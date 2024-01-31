@@ -627,5 +627,43 @@ namespace System.Web.UI.Tests
             string html = sw.ToString();
             Assert.AreEqual("http%3A%2F%2Flocalhost%2FSampleFolder%2FSample%20%2B%20File.txt", html);
         }
+
+        [TestMethod]
+        public void TestWriteEmptyTags()
+        {
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw);
+
+            writer.RenderBeginTag("textarea");
+            writer.Write(String.Empty);
+            writer.RenderEndTag();
+
+            writer.RenderBeginTag("Foo");
+            writer.Write(String.Empty);
+            writer.RenderEndTag();
+
+            writer.RenderBeginTag("TextArea");
+            writer.Write(String.Empty);
+            writer.RenderEndTag();
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Textarea);
+            writer.Write(String.Empty);
+            writer.RenderEndTag();
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Div);
+            writer.Write(String.Empty);
+            writer.RenderEndTag();
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Div);
+            writer.RenderEndTag();
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Img);
+            writer.RenderEndTag();
+
+            string html = sw.ToString();
+
+            const string test = "<textarea></textarea><Foo>\r\n\t\r\n</Foo>\r\n<textarea></textarea><textarea></textarea><div>\r\n\t\r\n</div>\r\n<div />\r\n<img />\r\n";
+            Assert.AreEqual(test, html);
+        }
     }
 }

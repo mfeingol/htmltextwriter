@@ -37,13 +37,12 @@ namespace System.Web.UI
 
         string tabString = DefaultTabString;
 
-        Stack<string> openTags;
+        Stack<TagMetadata> openTags;
         List<KeyValuePair<string, string>> attributes;        
         List<KeyValuePair<string, string>> styleAttributes;        
 
         int indent;
         bool lineWasIndented;
-        bool pendingCloseTag;
 
         //
         // Constructors
@@ -125,20 +124,20 @@ namespace System.Web.UI
         // Tags
         //
 
-        public void RenderBeginTag(HtmlTextWriterTag tagKey) => this.RenderBeginTagInternal(tagKey.ToName());
+        public void RenderBeginTag(HtmlTextWriterTag tagKey) => this.RenderBeginTagInternal(tagKey.ToMetadata());
 
         public void RenderBeginTag(string name)
         {
             string lower = name.ToLowerInvariant();
-            if (name != lower && lower.IsName())
+            if (name != lower && lower.IsKnownTag())
                 name = lower;
 
-            this.RenderBeginTagInternal(name);
+            this.RenderBeginTagInternal(name.ToMetadata());
         }
 
-        void RenderBeginTagInternal(string name)
+        void RenderBeginTagInternal(TagMetadata metadata)
         {
-            this.WriteBeginTag(name);
+            this.WriteBeginTag(metadata.Name);
 
             if (this.attributes != null)
             {
@@ -156,15 +155,26 @@ namespace System.Web.UI
 
                 this.Write(DoubleQuoteChar);
                 this.styleAttributes.Clear();
-            }            
+            }
 
-            if (this.openTags == null)
-                this.openTags = new Stack<string>();
+            switch (metadata.Behavior)
+            {
+                case BeginTagBehavior.OpenTag:
+                    this.Write(TagRightChar);
+                    break;
+                case BeginTagBehavior.OpenTagWithLineBreak:
+                    this.Write(TagRightChar);
+                    this.WriteLine();
+                    break;
+                case BeginTagBehavior.SelfClose:
+                    this.Write(SelfClosingTagEnd);
+                    break;
+            }
 
-            this.openTags.Push(name);
+            this.openTags ??= new();
+            this.openTags.Push(metadata);
 
             this.Indent++;
-            this.pendingCloseTag = true;
         }
 
         public void RenderEndTag()
@@ -172,46 +182,21 @@ namespace System.Web.UI
             if (this.openTags == null || !this.openTags.Any())
                 throw new InvalidOperationException();
 
-            string tag = this.openTags.Pop();
+            TagMetadata metadata = this.openTags.Pop();
             this.Indent--;
 
-            if (this.pendingCloseTag)
+            switch (metadata.Behavior)
             {
-                this.InnerWriter.WriteLine(SelfClosingTagEnd);
-                this.AfterWriteLine();
-            }
-            else
-            {
-                if (this.lineWasIndented)
+                case BeginTagBehavior.OpenTag:
+                    this.Write($"{EndTagLeftChars}{metadata.Name}{TagRightChar}");
+                    break;
+                case BeginTagBehavior.OpenTagWithLineBreak:
                     this.WriteLine();
-
-                this.WriteLine($"{EndTagLeftChars}{tag}{TagRightChar}");
-            }
-
-            this.pendingCloseTag = false;
-        }
-
-        void CloseTagIfNecessary(bool newline = true)
-        {
-            if (this.pendingCloseTag)
-            {
-                this.InnerWriter.Write(TagRightChar);
-                this.pendingCloseTag = false;
-
-                if (newline)
-                    this.WriteLine();
-            }
-        }
-
-        async Task CloseTagIfNecessaryAsync(bool newline = true)
-        {
-            if (this.pendingCloseTag)
-            {
-                await this.InnerWriter.WriteAsync(TagRightChar);
-                this.pendingCloseTag = false;
-
-                if (newline)
-                    await this.WriteLineAsync();
+                    this.Write($"{EndTagLeftChars}{metadata.Name}{TagRightChar}");
+                    break;
+                case BeginTagBehavior.SelfClose:
+                    // No-op
+                    break;
             }
         }
 
@@ -241,32 +226,25 @@ namespace System.Web.UI
             }
         }
 
-        void ResetIndent()
-        {
-            this.lineWasIndented = false;
-        }
-
         //
         // Coordination
         //
 
-        void BeforeWrite(bool indent = true, bool newLineIfClosingTag = true)
+        void BeforeWrite(bool indent = true)
         {
-            this.CloseTagIfNecessary(newLineIfClosingTag);
             if (indent)
                 this.IndentIfNecessary();
         }
 
-        async Task BeforeWriteAsync(bool indent = true, bool newLineIfClosingTag = true)
+        async Task BeforeWriteAsync(bool indent = true)
         {
-            await this.CloseTagIfNecessaryAsync(newLineIfClosingTag);
             if (indent)
                 await this.IndentIfNecessaryAsync();
         }
 
         void AfterWriteLine()
         {
-            this.ResetIndent();
+            this.lineWasIndented = false;
         }
 
         //
@@ -301,7 +279,7 @@ namespace System.Web.UI
         }       
 
         public void WriteBeginTag(string name) => this.Write($"{TagLeftChar}{name}");
-        public void WriteBreak() => this.Write($"{TagLeftChar}{HtmlTextWriterTag.Br.ToName()}{SelfClosingTagEnd}");
+        public void WriteBreak() => this.Write($"{TagLeftChar}{HtmlTextWriterTag.Br.ToMetadata().Name}{SelfClosingTagEnd}");
         public void WriteEncodedText(string text) => this.Write(WebUtility.HtmlEncode(text));
         public void WriteEncodedUrl(string url)
         {
@@ -515,7 +493,7 @@ namespace System.Web.UI
 
         public override void WriteLine()
         {
-            this.BeforeWrite(indent: false, newLineIfClosingTag: false);
+            this.BeforeWrite(indent: false);
             this.InnerWriter.WriteLine();
             this.AfterWriteLine();
         }

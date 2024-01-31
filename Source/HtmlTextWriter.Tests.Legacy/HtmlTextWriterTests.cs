@@ -651,5 +651,37 @@ namespace System.Web.UI.Tests
             const string test = "<textarea></textarea><Foo>\r\n\t\r\n</Foo><textarea></textarea><textarea></textarea><div>\r\n\t\r\n</div><div>\r\n\r\n</div><img />";
             Assert.AreEqual(test, html);
         }
+
+        [TestMethod]
+        public void TestRenderBeginTagBehaviors()
+        {
+            for (HtmlTextWriterTag tag = HtmlTextWriterTag.A; tag <= HtmlTextWriterTag.Xml; tag++)
+                TestRenderBeginTagBehaviors(tag.ToString().ToLowerInvariant());
+
+            TestRenderBeginTagBehaviors("Random");
+        }
+
+        static void TestRenderBeginTagBehaviors(string tag)
+        {
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw);
+
+            writer.RenderBeginTag(tag);
+
+            string html = sw.ToString();
+
+            string test1 = $"<{tag}>";
+            string test2 = $"<{tag} />";
+            string test3 = $"<{tag}>\r\n";
+
+            if (html == test1)
+                Debug.WriteLine($"\t{{ HtmlTextWriterTag.{tag}, new(\"{tag}\", BeginTagBehavior.OpenTag) }},");
+            else if (html == test2)
+                Debug.WriteLine($"\t{{ HtmlTextWriterTag.{tag}, new(\"{tag}\", BeginTagBehavior.SelfClose) }},");
+            else if (html == test3)
+                Debug.WriteLine($"\t{{ HtmlTextWriterTag.{tag}, new(\"{tag}\", BeginTagBehavior.OpenTagWithLineBreak) }},");
+            else
+                Debug.WriteLine($"{tag} - ???: {html}");
+        }
     }
 }
