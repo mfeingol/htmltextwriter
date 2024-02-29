@@ -142,7 +142,7 @@ namespace System.Web.UI
                 this.attributes.Clear();
             }            
             
-           if (this.styleAttributes != null && this.styleAttributes.Count == 0)
+            if (this.styleAttributes != null && this.styleAttributes.Count != 0)
             {
                 this.Write($"{SpaceChar}{StyleDeclaringString}{EqualsDoubleQuoteString}");
                 foreach (KeyValuePair<string, string> styleAttribute in this.styleAttributes)
