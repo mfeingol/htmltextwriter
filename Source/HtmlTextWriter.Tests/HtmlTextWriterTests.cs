@@ -653,6 +653,27 @@ namespace System.Web.UI.Tests
         }
 
         [TestMethod]
+        public void TestWriteStyleAttribute()
+        {
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw);
+
+            writer.AddStyleAttribute(HtmlTextWriterStyle.Color, "Red");
+            writer.AddStyleAttribute(HtmlTextWriterStyle.FontSize, "16");
+            writer.AddStyleAttribute("Font-Family", "Arial");
+            writer.AddStyleAttribute("CustomStyle", "CustomStyleValue");
+            writer.RenderBeginTag(HtmlTextWriterTag.Span);
+            writer.WriteStyleAttribute("Font-size", "23");
+            writer.Write("Hello");
+            writer.RenderEndTag();
+
+            string html = sw.ToString();
+
+            const string test = "<span style=\"color:Red;font-size:16;Font-Family:Arial;CustomStyle:CustomStyleValue;\">Font-size:23;Hello</span>";
+            Assert.AreEqual(test, html);
+        }
+
+        [TestMethod]
         public void TestRenderBeginTagBehaviors()
         {
             for (HtmlTextWriterTag tag = HtmlTextWriterTag.A; tag <= HtmlTextWriterTag.Xml; tag++)

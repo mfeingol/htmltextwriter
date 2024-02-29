@@ -142,7 +142,7 @@ namespace System.Web.UI
                 this.attributes.Clear();
             }            
             
-           if (this.styleAttributes != null && this.styleAttributes.Count == 0)
+           if (this.styleAttributes != null && this.styleAttributes.Count != 0)
             {
                 this.Write($"{SpaceChar}{StyleDeclaringString}{EqualsDoubleQuoteString}");
                 foreach (KeyValuePair<string, string> styleAttribute in this.styleAttributes)
@@ -268,13 +268,13 @@ namespace System.Web.UI
         {
             if (name != null && value != null)
             {
-                this.Write($"{name.ToLowerInvariant()}{StyleEqualsChar}");
+                this.Write($"{name}{StyleEqualsChar}");
                 if (encode)
                     value = WebUtility.HtmlEncode(value);
-                               
+
                 this.Write($"{value}{SemicolonChar}");
             }
-        }       
+        }
 
         public void WriteBeginTag(string name) => this.Write($"{TagLeftChar}{name}");
         public void WriteBreak() => this.Write($"{TagLeftChar}{HtmlTextWriterTag.Br.ToMetadata().Name}{SelfClosingTagEnd}");
