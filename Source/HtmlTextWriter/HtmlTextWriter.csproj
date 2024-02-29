@@ -17,9 +17,10 @@
     <RepositoryUrl>https://github.com/mfeingol/htmltextwriter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Description>.NET Standard-compatible replacement for System.Web.UI.HtmlWriter</Description>
-    <PackageReleaseNotes>3.0.0
+    <PackageReleaseNotes>3.0.1
 ===
-- Update tag rendering and whitespace/linebreak handling to match legacy HtmlTextWriter</PackageReleaseNotes>
+- Fix some issues with style attributes (thanks, @lordfanger)
+- Reduce heap usage on .NET 8 (thanks, @lordfanger)</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mfeingol/htmltextwriter</PackageProjectUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
