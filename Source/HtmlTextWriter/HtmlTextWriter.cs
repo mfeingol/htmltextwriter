@@ -27,7 +27,7 @@ namespace System.Web.UI
         public const char SpaceChar = ' ';
         public const char StyleEqualsChar = ':';
         public const char TagLeftChar = '<';
-        public const char TagRightChar = '>';        
+        public const char TagRightChar = '>';
         public const string StyleDeclaringString = "style";
 
         //
@@ -37,8 +37,8 @@ namespace System.Web.UI
         readonly string tabString = DefaultTabString;
 
         Stack<TagMetadata> openTags;
-        List<KeyValuePair<string, string>> attributes;        
-        List<KeyValuePair<string, string>> styleAttributes;        
+        List<KeyValuePair<string, string>> attributes;
+        List<KeyValuePair<string, string>> styleAttributes;
 
         int indent;
         bool lineWasIndented;
@@ -99,7 +99,7 @@ namespace System.Web.UI
 
             this.attributes ??= [];
             this.attributes.Add(new KeyValuePair<string, string>(name, value));
-        }        
+        }
         public void AddStyleAttribute(HtmlTextWriterStyle key, string value) => this.AddStyleAttribute(key, value, true);
         public void AddStyleAttribute(HtmlTextWriterStyle key, string value, bool encode) => AddStyleAttribute(key.ToName(), value, encode);
 
@@ -113,7 +113,7 @@ namespace System.Web.UI
 
             this.styleAttributes ??= [];
             this.styleAttributes.Add(new KeyValuePair<string, string>(name, value));
-        }        
+        }
 
         //
         // Tags
@@ -140,8 +140,8 @@ namespace System.Web.UI
                     this.WriteAttribute(attribute.Key, attribute.Value, false); // Already encoded
 
                 this.attributes.Clear();
-            }            
-            
+            }
+
            if (this.styleAttributes != null && this.styleAttributes.Count == 0)
             {
                 this.Write($"{SpaceChar}{StyleDeclaringString}{EqualsDoubleQuoteString}");
@@ -261,8 +261,8 @@ namespace System.Web.UI
 
                 this.Write($"{EqualsDoubleQuoteString}{value}{DoubleQuoteChar}");
             }
-        }       
-        
+        }
+
         public void WriteStyleAttribute(string name, string value) => this.WriteStyleAttribute(name, value, true);
         public void WriteStyleAttribute(string name, string value, bool encode)
         {
@@ -271,10 +271,10 @@ namespace System.Web.UI
                 this.Write($"{name.ToLowerInvariant()}{StyleEqualsChar}");
                 if (encode)
                     value = WebUtility.HtmlEncode(value);
-                               
+
                 this.Write($"{value}{SemicolonChar}");
             }
-        }       
+        }
 
         public void WriteBeginTag(string name) => this.Write($"{TagLeftChar}{name}");
         public void WriteBreak() => this.Write($"{TagLeftChar}{HtmlTextWriterTag.Br.ToMetadata().Name}{SelfClosingTagEnd}");
@@ -283,7 +283,13 @@ namespace System.Web.UI
         {
             int index = url.IndexOf('?');
             if (index != -1)
+            {
+#if NET8_0_OR_GREATER
+                this.Write($"{Uri.EscapeDataString(url[..index])}{url.AsSpan(index..)}");
+#else
                 this.Write($"{Uri.EscapeDataString(url.Substring(0, index))}{url.Substring(index)}");
+#endif
+            }
             else
                 this.Write(Uri.EscapeDataString(url));
         }
@@ -586,5 +592,104 @@ namespace System.Web.UI
             await this.InnerWriter.WriteLineAsync(value);
             this.AfterWriteLine();
         }
+
+#if NET8_0_OR_GREATER
+        /// <summary>
+        /// Performance optimized version of Write method overload.
+        /// </summary>
+        private void Write(HtmlTextWriteInterpolatedStringHandler handler)
+        {
+            BeforeWrite();
+            handler.Write(this.InnerWriter);
+        }
+
+        private const int ValueCharBufferLength = 256;
+
+        [Runtime.CompilerServices.InterpolatedStringHandler]
+        private ref struct HtmlTextWriteInterpolatedStringHandler
+        {
+            // Storage for data
+            private ValueCharBuffer spanBuffer; // On stack
+            private StringBuilder builder; // Fallback on heap
+            private int spanBufferIndex;
+
+            public HtmlTextWriteInterpolatedStringHandler(int literalLength, int formattedCount)
+            {
+                spanBuffer = new ();
+            }
+
+            public void AppendLiteral(string s)
+            {
+                AppendFormatted(s);
+            }
+
+            public void AppendFormatted(ReadOnlySpan<char> s)
+            {
+                EnsureBuffer(s.Length);
+                if (builder != null)
+                {
+                    builder.Append(s);
+                }
+                else
+                {
+                    s.CopyTo(spanBuffer[spanBufferIndex..]);
+                    spanBufferIndex += s.Length;
+                }
+            }
+
+            public void AppendFormatted(char c)
+            {
+                EnsureBuffer(1);
+                if (builder != null)
+                {
+                    builder.Append(c);
+                }
+                else
+                {
+                    spanBuffer[spanBufferIndex] = c;
+                    spanBufferIndex++;
+                }
+            }
+
+            private void EnsureBuffer(int length)
+            {
+                if (spanBufferIndex == -1) return;
+
+                if (spanBufferIndex + length > ValueCharBufferLength)
+                {
+                    builder = new(ValueCharBufferLength * 2);
+                    if (spanBufferIndex > 0)
+                    {
+                        builder.Append(spanBuffer[..spanBufferIndex]);
+                    }
+                    spanBufferIndex = -1;
+                }
+            }
+
+            internal void Write(TextWriter innerWriter)
+            {
+                if (builder != null)
+                {
+                    foreach (var chunk in builder.GetChunks())
+                    {
+                        innerWriter.Write(chunk);
+                    }
+                }
+                else
+                {
+                    innerWriter.Write(spanBuffer[..spanBufferIndex]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Struct to hold char buffer on the stack leading to zero allocations from HtmlTextWriter.
+        /// </summary>
+        [Runtime.CompilerServices.InlineArray(ValueCharBufferLength)]
+        private struct ValueCharBuffer
+        {
+            private char _element0;
+        }
+#endif
     }
 }
