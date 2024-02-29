@@ -27,7 +27,7 @@ namespace System.Web.UI
         public const char SpaceChar = ' ';
         public const char StyleEqualsChar = ':';
         public const char TagLeftChar = '<';
-        public const char TagRightChar = '>';        
+        public const char TagRightChar = '>';
         public const string StyleDeclaringString = "style";
 
         //
@@ -37,8 +37,8 @@ namespace System.Web.UI
         readonly string tabString = DefaultTabString;
 
         Stack<TagMetadata> openTags;
-        List<KeyValuePair<string, string>> attributes;        
-        List<KeyValuePair<string, string>> styleAttributes;        
+        List<KeyValuePair<string, string>> attributes;
+        List<KeyValuePair<string, string>> styleAttributes;
 
         int indent;
         bool lineWasIndented;
@@ -99,7 +99,7 @@ namespace System.Web.UI
 
             this.attributes ??= [];
             this.attributes.Add(new KeyValuePair<string, string>(name, value));
-        }        
+        }
         public void AddStyleAttribute(HtmlTextWriterStyle key, string value) => this.AddStyleAttribute(key, value, true);
         public void AddStyleAttribute(HtmlTextWriterStyle key, string value, bool encode) => AddStyleAttribute(key.ToName(), value, encode);
 
@@ -113,7 +113,7 @@ namespace System.Web.UI
 
             this.styleAttributes ??= [];
             this.styleAttributes.Add(new KeyValuePair<string, string>(name, value));
-        }        
+        }
 
         //
         // Tags
@@ -140,9 +140,9 @@ namespace System.Web.UI
                     this.WriteAttribute(attribute.Key, attribute.Value, false); // Already encoded
 
                 this.attributes.Clear();
-            }            
-            
-           if (this.styleAttributes != null && this.styleAttributes.Count != 0)
+            }
+
+            if (this.styleAttributes != null && this.styleAttributes.Count != 0)
             {
                 this.Write($"{SpaceChar}{StyleDeclaringString}{EqualsDoubleQuoteString}");
                 foreach (KeyValuePair<string, string> styleAttribute in this.styleAttributes)
@@ -261,8 +261,8 @@ namespace System.Web.UI
 
                 this.Write($"{EqualsDoubleQuoteString}{value}{DoubleQuoteChar}");
             }
-        }       
-        
+        }
+
         public void WriteStyleAttribute(string name, string value) => this.WriteStyleAttribute(name, value, true);
         public void WriteStyleAttribute(string name, string value, bool encode)
         {
