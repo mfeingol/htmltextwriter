@@ -615,6 +615,22 @@ namespace System.Web.UI.Tests
         }
 
         [TestMethod]
+        public void TestEncodedUrlQueryString()
+        {
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw, String.Empty);
+
+            writer.WriteEncodedUrl("http://localhost/SampleFolder/Sample + File.txt?v=1");
+
+            string html = sw.ToString();
+
+            const string test = "http://localhost/SampleFolder/Sample%20%2b%20File.txt?v=1";
+            const string test2 = "http%3A%2F%2Flocalhost%2FSampleFolder%2FSample%20%2B%20File.txt?v=1";
+
+            Assert.IsTrue(html == test || html == test2);
+        }
+
+        [TestMethod]
         public void TestWriteEmptyTags()
         {
             using StringWriter sw = new();
@@ -670,6 +686,22 @@ namespace System.Web.UI.Tests
             string html = sw.ToString();
 
             const string test = "<span style=\"color:Red;font-size:16;Font-Family:Arial;CustomStyle:CustomStyleValue;\">Font-size:23;Hello</span>";
+            Assert.AreEqual(test, html);
+        }
+
+        [TestMethod]
+        public void TestLongAttributeValue()
+        {
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw, String.Empty);
+
+            writer.AddAttribute("data-json", """{"style-color":"#ff0000", "style-background":"#000000", "style-width":1024, "style-height": 768, "style-top": 0, "style-left": 0, "style-right": 0, "style-bottom": 0, "style-position": "absolute", "style-display": "block"}""");
+            writer.RenderBeginTag("div");
+            writer.RenderEndTag();
+
+            string html = sw.ToString();
+
+            const string test = "<div data-json=\"{&quot;style-color&quot;:&quot;#ff0000&quot;, &quot;style-background&quot;:&quot;#000000&quot;, &quot;style-width&quot;:1024, &quot;style-height&quot;: 768, &quot;style-top&quot;: 0, &quot;style-left&quot;: 0, &quot;style-right&quot;: 0, &quot;style-bottom&quot;: 0, &quot;style-position&quot;: &quot;absolute&quot;, &quot;style-display&quot;: &quot;block&quot;}\">\r\n\r\n</div>";
             Assert.AreEqual(test, html);
         }
 
