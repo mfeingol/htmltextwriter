@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -283,7 +284,11 @@ namespace System.Web.UI
         {
             int index = url.IndexOf('?');
             if (index != -1)
+#if NET8_0_OR_GREATER
+                this.Write($"{Uri.EscapeDataString(url[..index])}{url.AsSpan(index..)}");
+#else
                 this.Write($"{Uri.EscapeDataString(url.Substring(0, index))}{url.Substring(index)}");
+#endif
             else
                 this.Write(Uri.EscapeDataString(url));
         }
@@ -586,5 +591,100 @@ namespace System.Web.UI
             await this.InnerWriter.WriteLineAsync(value);
             this.AfterWriteLine();
         }
+
+#if NET8_0_OR_GREATER
+        // Performance optimized version of Write method overload.
+        void Write(HtmlTextWriteInterpolatedStringHandler handler)
+        {
+            this.BeforeWrite();
+            handler.Write(this.InnerWriter);
+        }
+
+        const int ValueCharBufferLength = 256;
+
+        [InterpolatedStringHandler]
+        ref struct HtmlTextWriteInterpolatedStringHandler
+        {
+            // Storage for data
+            ValueCharBuffer spanBuffer; // On stack
+            StringBuilder builder; // Fallback on heap
+            int spanBufferIndex;
+
+            public HtmlTextWriteInterpolatedStringHandler(int literalLength, int formattedCount)
+            {
+                spanBuffer = new();
+            }
+
+            public void AppendLiteral(string s)
+            {
+                this.AppendFormatted(s);
+            }
+
+            public void AppendFormatted(ReadOnlySpan<char> s)
+            {
+                this.EnsureBuffer(s.Length);
+
+                if (builder != null)
+                {
+                    builder.Append(s);
+                }
+                else
+                {
+                    s.CopyTo(spanBuffer[spanBufferIndex..]);
+                    spanBufferIndex += s.Length;
+                }
+            }
+
+            public void AppendFormatted(char c)
+            {
+                this.EnsureBuffer(1);
+
+                if (builder != null)
+                {
+                    builder.Append(c);
+                }
+                else
+                {
+                    spanBuffer[spanBufferIndex] = c;
+                    spanBufferIndex++;
+                }
+            }
+
+            void EnsureBuffer(int length)
+            {
+                if (spanBufferIndex == -1)
+                    return;
+
+                if (spanBufferIndex + length > ValueCharBufferLength)
+                {
+                    builder = new(ValueCharBufferLength * 2);
+                    if (spanBufferIndex > 0)
+                        builder.Append(spanBuffer[..spanBufferIndex]);
+
+                    spanBufferIndex = -1;
+                }
+            }
+
+            internal readonly void Write(TextWriter innerWriter)
+            {
+                if (builder != null)
+                {
+                    foreach (var chunk in builder.GetChunks())
+                        innerWriter.Write(chunk);
+                }
+                else
+                {
+                    innerWriter.Write(spanBuffer[..spanBufferIndex]);
+                }
+            }
+        }
+
+        // Struct to hold char buffer on the stack leading to zero allocations from HtmlTextWriter.
+        [InlineArray(ValueCharBufferLength)]
+        struct ValueCharBuffer
+        {
+            char _element0;
+        }
+#endif
     }
 }
