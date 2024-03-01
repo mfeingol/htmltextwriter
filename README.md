@@ -6,16 +6,10 @@ HtmlTextWriter is a simple, drop-in replacement for the .NET Framework's [System
 
 ## Target uses
 
-This library is intended for apps ported from .NET Framework to Xamarin, UWP, or .NET Core in general, and which use System.Web.UI.HtmlWriter to generate simple HTML content. If you're writing new code in .NET Core, presumably there's an ASP.NET Core thing you can use instead.
+This library implements the .NET Framework System.Web.UI.HtmlWriter API to generate simple HTML content. HtmlWriter was not carried forward to more modern versions of .NET, so this library is intended to help with porting older apps. If you're writing new .NET code, then presumably there's an ASP.NET thing you can use instead.
 
 ## Gaps
 
-This library is a reimplementation, and may not be character-for-character compatible with the original. E.g. linebreak handling may be subtly different. That's probably okay.
+This library is a clean room reimplementation, and may not be character-for-character compatible with the original.
 
-The original HtmlTextWriter has a number of features that this one doesn't support yet:
-
-- Styles
-- Non-closing tags, such as `<hr>` or `<meta>`
-- Most of the protected members used by derived classes.
-
-If your scenarios require these things, or if you find a bug, feel free to submit a PR.
+The original HtmlTextWriter has a number of features that this one doesn't support yet, including many of the protected members that could have been used by derived classes. If your scenarios require these things, or if you find a bug, feel free to submit a PR.
