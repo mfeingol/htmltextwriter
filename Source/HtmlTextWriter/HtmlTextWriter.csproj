@@ -6,7 +6,7 @@
     <RootNamespace>System.Web.UI</RootNamespace>
     <Authors>Max Feingold</Authors>
     <Company>Max Feingold</Company>
-    <Version>3.0.1</Version>
+    <Version>3.0.2</Version>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
