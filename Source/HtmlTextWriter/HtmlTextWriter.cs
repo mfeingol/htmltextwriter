@@ -75,7 +75,13 @@ namespace System.Web.UI
                 this.indent = value;
             }
         }
-        public override string NewLine => this.InnerWriter.NewLine;
+
+        public override string NewLine
+        {
+            get => this.InnerWriter.NewLine;
+            set => this.InnerWriter.NewLine = value;
+        }
+
         public override Encoding Encoding => this.InnerWriter.Encoding;
 
         //

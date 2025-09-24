@@ -706,6 +706,42 @@ namespace System.Web.UI.Tests
         }
 
         [TestMethod]
+        public void TestDefaultNewLine()
+        {
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw, String.Empty);
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Html);
+            writer.RenderBeginTag(HtmlTextWriterTag.Body);
+            writer.Write("Hello World");
+            writer.RenderEndTag();
+            writer.RenderEndTag();
+
+            string html = sw.ToString();
+
+            const string test = "<html>\r\n<body>\r\nHello World\r\n</body>\r\n</html>";
+            Assert.AreEqual(test, html);
+        }
+
+        [TestMethod]
+        public void TestEmptyNewLine()
+        {
+            using StringWriter sw = new();
+            using HtmlTextWriter writer = new(sw, String.Empty) { NewLine = String.Empty };
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Html);
+            writer.RenderBeginTag(HtmlTextWriterTag.Body);
+            writer.Write("Hello World");
+            writer.RenderEndTag();
+            writer.RenderEndTag();
+
+            string html = sw.ToString();
+
+            const string test = "<html><body>Hello World</body></html>";
+            Assert.AreEqual(test, html);
+        }
+
+        [TestMethod]
         public void TestRenderBeginTagBehaviors()
         {
             for (HtmlTextWriterTag tag = HtmlTextWriterTag.A; tag <= HtmlTextWriterTag.Xml; tag++)
