@@ -17,10 +17,10 @@
     <RepositoryUrl>https://github.com/mfeingol/htmltextwriter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Description>.NET Standard-compatible replacement for System.Web.UI.HtmlWriter</Description>
-    <PackageReleaseNotes>3.0.1
+    <PackageReleaseNotes>3.0.2
 ===
-- Fix some issues with style attributes (thanks, @lordfanger)
-- Reduce heap usage on .NET 8 (thanks, @lordfanger)</PackageReleaseNotes>
+- Fix #15: Setting HtmlTextWriter Newline property doesnt work
+- Add .NET 9 target, remove .NET Standard 1.4 and .NET 8 targets</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mfeingol/htmltextwriter</PackageProjectUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
