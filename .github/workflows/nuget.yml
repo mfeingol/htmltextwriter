@@ -11,11 +11,15 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 8.x
+        dotnet-version: 9.0.x
+    - name: Restore dependencies
+      run: dotnet restore ./Source/HtmlTextWriter/HtmlTextWriter.csproj
+    - name: Run tests
+      run: dotnet test ./Source/HtmlTextWriter.Tests/HtmlTextWriter.Tests.csproj --no-build --verbosity normal
     - name: Build NuGet package
       run: dotnet pack ./Source/HtmlTextWriter/HtmlTextWriter.csproj -c Release -o packages
     - name: Publish NuGet package
