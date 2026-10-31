@@ -9,18 +9,25 @@ jobs:
   build:
 
     runs-on: windows-latest
+    environment: nuget
+    permissions:
+      contents: read
+      id-token: write  # Required for NuGet trusted publishing (OIDC)
 
     steps:
     - uses: actions/checkout@v5
     - name: Setup .NET
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 9.0.x
-    - name: Restore dependencies
-      run: dotnet restore ./Source/HtmlTextWriter/HtmlTextWriter.csproj
+        dotnet-version: 10.0.x
     - name: Run tests
-      run: dotnet test ./Source/HtmlTextWriter.Tests/HtmlTextWriter.Tests.csproj --no-build --verbosity normal
+      run: dotnet test ./Source/HtmlTextWriter.Tests/HtmlTextWriter.Tests.csproj --verbosity normal
     - name: Build NuGet package
       run: dotnet pack ./Source/HtmlTextWriter/HtmlTextWriter.csproj -c Release -o packages
+    - name: NuGet login
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{ secrets.NUGET_USER }}
     - name: Publish NuGet package
-      run: dotnet nuget push .\packages\HtmlTextWriter*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push .\packages\HtmlTextWriter*.nupkg -k ${{ steps.login.outputs.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
