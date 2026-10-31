@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="HtmlTextWriter.Tests.Legacy/HtmlTextWriter.Tests.Legacy.csproj" />
+  <Project Path="HtmlTextWriter.Tests/HtmlTextWriter.Tests.csproj" />
+  <Project Path="HtmlTextWriter/HtmlTextWriter.csproj" />
+</Solution>
